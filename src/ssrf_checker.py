@@ -1,27 +1,36 @@
+__description__ = 'Check a target URL with multiple payloads to detect the SSRF vulnerability.'
 import requests
 import logging
 import time
-__description__ == 'Check a target URL with multiple payloads to detect the SSRF vulnerability.'
+import optparse
+#from requester import is_ssrf_vulnerable_using_payload
 
 
 def get_payloads(source):
-    payloads_file_descriptor = open(source, 'rb')
+    try:
+        payloads_file_descriptor = open(source, 'rb')
+    except IOError:
+        logging.error('-p parameter was not provided and \'payloads.txt\' was missing.')
+        raise
     payloads = payloads_file_descriptor.readlines()
     payloads_file_descriptor.close()
     return payloads
 
 
 def main():
-    oParser = optparse.OptionParser(usage='usage: %prog [options] file\n' + __description__)
+    oParser = optparse.OptionParser(usage='%s\nUsage: ssrf_checker [options]' % (__description__))
     oParser.add_option('-t', '--target-url', default=None, help='Target URL.')
     oParser.add_option('-p', '--payloads', default='payloads.txt', help='File containing payloads.')
     (options, args) = oParser.parse_args()
-    logging.basicConfig(filename=options.input + '_' + str(time.time()) + '.log',
+    logging.basicConfig(filename='%s_%s.log' % (options.target_url, str(time.time())),
                         filemode='wb',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S',
                         level=logging.INFO)
-    payloads = get_payloads(options.payloads)
+    if options.target_url is None:
+        raise Exception('Missing parameter: target url.')
+    payloads = [payload.strip('\r\n ') for payload in get_payloads(options.payloads)] # Strips whitespaces, \r and \n
+    logging.debug('Payload list: %s' % (str(payloads)))
 
 if __name__ == '__main__':
     main()
