@@ -3,7 +3,7 @@ import requests
 import logging
 import time
 import optparse
-#from requester import is_ssrf_vulnerable_using_payload
+from single_ssrf_check import check_ssrf_for_site
 
 
 def get_payloads(source):
