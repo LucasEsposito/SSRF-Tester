@@ -31,6 +31,10 @@ def main():
         raise Exception('Missing parameter: target url.')
     payloads = [payload.strip('\r\n ') for payload in get_payloads(options.payloads)] # Strips whitespaces, \r and \n
     logging.debug('Payload list: %s' % (str(payloads)))
+    vulnerabilities = []
+    for payload in payloads:
+        vulnerabilities.extend(check_ssrf_for_site(options.target, payload))
+    
 
 if __name__ == '__main__':
     main()

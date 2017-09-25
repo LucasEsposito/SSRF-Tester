@@ -30,8 +30,3 @@ def check_ssrf_for_site(target_url, payload):
         if is_vulnerable(target_url, payload, function):
             vulnerabilities.append(SSRFVulnerability(target_url, payload, function))
     return vulnerabilities
-
-
-def asdadsadasdsada():
-    response = function(url) if payload is None else function(url, payload)
-    requests.post('http://httpbin.org/post', data={'key': 'value'})
