@@ -3,7 +3,8 @@ import time
 
 
 def succeed_connection_from(target_url, function):
-    return True # TODO ask the server about the result.
+    url = '127.0.0.1:5050/get_result'
+    return requests.get(url).json()['vulnerable']
 
 
 def send_time():
@@ -11,4 +12,3 @@ def send_time():
     url = '127.0.0.1:5050/time'
     payload = {'time': now}
     requests.post(url, payload)
-    
