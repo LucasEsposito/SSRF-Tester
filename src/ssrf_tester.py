@@ -1,10 +1,9 @@
 __description__ = 'Check a target URL with multiple payloads to detect the SSRF vulnerability.'
-import requests
 import logging
 import time
 import optparse
 from single_ssrf_check import check_ssrf_for_site
-
+from webserver_thread import http_server, get_indexes
 
 def get_payloads(source):
     try:
@@ -18,22 +17,32 @@ def get_payloads(source):
 
 
 def main():
+    # Parameters
     oParser = optparse.OptionParser(usage='%s\nUsage: ssrf_checker [options]' % (__description__))
     oParser.add_option('-t', '--target-url', default=None, help='Target URL.')
     oParser.add_option('-p', '--payloads', default='payloads.txt', help='File containing payloads.')
     (options, args) = oParser.parse_args()
+    # Logs
     logging.basicConfig(filename='%s_%s.log' % (options.target_url, str(time.time())),
                         filemode='wb',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S',
                         level=logging.INFO)
+    # Input validations
     if options.target_url is None:
         raise Exception('Missing parameter: target url.')
+    # Start HTTP Server to handle requests from the target page
+    thread_server = http_server()
+    thread_server.start()
+    # Load payloads
     payloads = [payload.strip('\r\n ') for payload in get_payloads(options.payloads)] # Strips whitespaces, \r and \n
     logging.debug('Payload list: %s' % (str(payloads)))
     vulnerabilities = []
+    index = 1
     for payload in payloads:
-        vulnerabilities.extend(check_ssrf_for_site(options.target, payload))
+        vulnerabilities.extend(check_ssrf_for_site(options.target, payload, index))
+    print('sleeping 10 seconds....')
+    print(str([vulnerability for vulnerability in vulnerabilities if (vulnerability.index in get_indexes())]))
     
 
 if __name__ == '__main__':
