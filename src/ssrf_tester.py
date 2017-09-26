@@ -23,7 +23,7 @@ def main():
     oParser.add_option('-p', '--payloads', default='payloads.txt', help='File containing payloads.')
     (options, args) = oParser.parse_args()
     # Logs
-    logging.basicConfig(filename='%s_%s.log' % (options.target_url, str(time.time())),
+    logging.basicConfig(filename='%s_%s.log' % ('log_', str(time.time())),
                         filemode='wb',
                         format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                         datefmt='%H:%M:%S',
