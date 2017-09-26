@@ -16,6 +16,9 @@ class SSRFVulnerability:
         self.index = index
         self.function = request_function_to_string(function)
 
+    def to_string(self):
+        return 'Target URL: %s\nPayload: %s\nHTTP Method: %s\n' % (self.target_url, self.payload, self.function)
+
 
 def check_ssrf_for_site(target_url, payload, index):
     #levantar el http web serv

@@ -41,9 +41,15 @@ def main():
     vulnerabilities = []
     index = 1
     for payload in payloads:
-        vulnerabilities.extend(check_ssrf_for_site(options.target, payload, index))
+        vulnerabilities.extend(check_ssrf_for_site(options.target_url, payload, str(index)))
     stop()
-    print(str([vulnerability for vulnerability in vulnerabilities if (vulnerability.index in get_indexes())]))
+    results = [vulnerability.to_string() for vulnerability in vulnerabilities if (vulnerability.index in get_indexes())]
+    if results != []:
+        for result in results:
+            print(results)
+            print('--------------------')
+    else:
+        print('No SSRF vulnerability detected.')
 
 
 if __name__ == '__main__':
