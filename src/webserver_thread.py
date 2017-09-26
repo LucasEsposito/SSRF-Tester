@@ -1,7 +1,7 @@
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-stop = True
+stop = True 
 indexes = list()
 
 
@@ -11,7 +11,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         indexes.append(int(self.path[1:]))
         self.send_response(200)
-        self.send_header("Set-Cookie", "foo=bar")
+        
+    def log_request(self, code='-', size='-'):
+        return         
 
 class http_server(threading.Thread):
     global stop
@@ -23,9 +25,11 @@ class http_server(threading.Thread):
         server = HTTPServer(('', port), RequestHandler)
         print('Listening on localhost:%s' % port)
         while(stop):
-            print("adentro")
             server.handle_request()
 
 
 def get_indexes():
     return indexes
+
+def stop():
+    stop = False

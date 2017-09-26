@@ -18,8 +18,10 @@ class SSRFVulnerability:
 
 
 def check_ssrf_for_site(target_url, payload, index):
+    #levantar el http web serv
     vulnerabilities = []
     for function in functions:
         function(target_url + payload.replace('<index>',index))
         vulnerabilities.append(SSRFVulnerability(target_url, payload.replace('<index>',''), index, function))
+    #matar http webserv
     return vulnerabilities

@@ -3,7 +3,7 @@ import logging
 import time
 import optparse
 from single_ssrf_check import check_ssrf_for_site
-from webserver_thread import http_server, get_indexes
+from webserver_thread import http_server, get_indexes, stop
 
 def get_payloads(source):
     try:
@@ -34,6 +34,7 @@ def main():
     # Start HTTP Server to handle requests from the target page
     thread_server = http_server()
     thread_server.start()
+    time.sleep(5)
     # Load payloads
     payloads = [payload.strip('\r\n ') for payload in get_payloads(options.payloads)] # Strips whitespaces, \r and \n
     logging.debug('Payload list: %s' % (str(payloads)))
@@ -41,9 +42,9 @@ def main():
     index = 1
     for payload in payloads:
         vulnerabilities.extend(check_ssrf_for_site(options.target, payload, index))
-    print('sleeping 10 seconds....')
+    stop()
     print(str([vulnerability for vulnerability in vulnerabilities if (vulnerability.index in get_indexes())]))
-    
+
 
 if __name__ == '__main__':
     main()
