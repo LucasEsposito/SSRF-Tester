@@ -39,10 +39,10 @@ def main():
     payloads = [payload.strip('\r\n ') for payload in get_payloads(options.payloads)] # Strips whitespaces, \r and \n
     logging.debug('Payload list: %s' % (str(payloads)))
     vulnerabilities = []
-    index = 1
-    for payload in payloads:
-        vulnerabilities.extend(check_ssrf_for_site(options.target_url, payload, str(index)))
-    stop()
+    for index in range(len(payloads)):
+        vulnerabilities.extend(check_ssrf_for_site(options.target_url, payloads[index], str(index + 1)))
+        if index == len(payloads): # Only one payload lasts
+            stop()
     results = [vulnerability.to_string() for vulnerability in vulnerabilities if (vulnerability.index in get_indexes())]
     if results != []:
         for result in results:
