@@ -2,7 +2,7 @@ import requests
 import logging
 import server_connector
 
-functions = [requests.get, requests.head, requests.options, requests.post, requests.put]
+functions = [requests.get, requests.head, requests.post, requests.put] #, requests.options]
 
 
 def request_function_to_string(function):

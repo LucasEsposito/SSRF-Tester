@@ -51,6 +51,6 @@ while(1):
 	print("dentro del main")
 	print(output_path)
 	stop = False
-	break;
+	break
 
 print("Estoy en main")
